@@ -1,5 +1,4 @@
 import { db } from "../firebase";
-
 import {
   collection,
   getDocs,
@@ -11,6 +10,8 @@ import {
 } from "firebase/firestore";
 
 const countCollectionRef = collection(db, "counts");
+
+
 class CountDataService {
   addCounts = (newCount) => {
     return addDoc(countCollectionRef, newCount);
@@ -34,6 +35,7 @@ class CountDataService {
     const countDoc = doc(db, "counts", id);
     return getDoc(countDoc);
   };
+
 }
 
 export default new CountDataService();

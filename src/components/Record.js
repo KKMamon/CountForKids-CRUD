@@ -3,8 +3,13 @@ import { Table, Button } from "react-bootstrap";
 import CountDataService from "../services/Countforkid.services"
 import { useNavigate } from "react-router";
 import { useUserAuth } from "../context/UserAuthContext";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
 
 const Record = ({ getCountId }) => {
+
+
+
     const [counts, setCounts] = useState([]);
     useEffect(() => {
         getCounts();
@@ -13,10 +18,11 @@ const Record = ({ getCountId }) => {
     const handleBack = async (e) => {
         e.preventDefault()
         navigate("/Home");
-      }
+      };
 
     const getCounts = async () => {
-        const data = await CountDataService.getAllCounts();
+        const q = query(collection(db, "counts"), where("Email", "==", user.email));
+        const data = await getDocs(q);
         console.log(data.docs);
         setCounts(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
@@ -48,7 +54,7 @@ const Record = ({ getCountId }) => {
                 <tbody>
                     {counts.map((doc, index) => {
                     return (
-                        <tr key={doc.id}>
+                        <tr key={doc.data}>
                             <td>{index + 1 }</td>
                             <td>{ doc.Email}</td>
                             <td>{ doc.title }</td>
